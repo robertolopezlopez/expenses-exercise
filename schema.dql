@@ -1,0 +1,22 @@
+-- This simple model is normalized (3rd normalized form).
+-- Given the short cardinality in the csv examples I am assuming
+-- that there are a short amount of departments and expense types, 
+-- and take the cost of duplicating the data across multiple expense
+-- entries. 
+-- To normalize the department, we would have to define a department_id
+-- as foreign key to departments(id) and always do the join (this
+-- is not free neither). This would be IO efficient, but not CPU
+-- efficient. 
+-- Similar story for expense types
+CREATE TABLE expenses (
+    -- db generated id, always (postgresql)
+    id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    department   VARCHAR(40) NOT NULL,
+    expense_type VARCHAR(20) NOT NULL,
+    year            SMALLINT NOT NULL CHECK (year BETWEEN 1900 AND 9999),
+    month           SMALLINT NOT NULL CHECK (month BETWEEN 1 AND 12),
+    amount          BIGINT NOT NULL
+);
+
+CREATE INDEX expenses_department_year_month_idx
+    ON expenses (department, year, month);

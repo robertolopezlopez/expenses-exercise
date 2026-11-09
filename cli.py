@@ -4,6 +4,7 @@ import sys
 from formatter.formatter import formatExpense
 from reader.reader import read_total
 
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("department")

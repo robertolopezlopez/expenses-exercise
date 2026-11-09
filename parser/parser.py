@@ -14,7 +14,6 @@ def parse_period(_period: str|None) -> list[int]:
     """
 
     months = {"jan": 0, "feb": 1, "mar": 2, "apr": 3, "may": 4, "jun": 5, "jul": 6, "aug": 7, "sep": 8, "oct": 9, "nov": 10, "dec": 11}
-    quarters = {"q1", "q2", "q3", "q4"}
     period = ""
     if _period is not None:
         period = _period.strip().lower()

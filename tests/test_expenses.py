@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import io
-import subprocess
 import sys
 import unittest
 from pathlib import Path

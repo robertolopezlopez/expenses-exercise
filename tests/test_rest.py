@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import sys
 import unittest
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from app import app
+
 
 class RestHappyPathTest(unittest.TestCase):
     def setUp(self) -> None:

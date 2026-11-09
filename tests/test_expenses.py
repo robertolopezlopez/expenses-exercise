@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from cli import main
+from expenses import main
 
 FILE_PARENTS = Path(__file__).resolve().parents
 EXPENSES_FILE = FILE_PARENTS[0] / "fixtures" / "Expenses.csv"
@@ -16,7 +16,9 @@ class CliTest(unittest.TestCase):
         self, expected: str, *args: str
     ) -> None:
         stdin = io.StringIO(EXPENSES_FILE.read_text(encoding="utf-8"))
-        with patch.object(sys, "argv", ["cli.py", *args]), patch.object(
+
+        # inject expenses file to stdin
+        with patch.object(sys, "argv", ["expenses.py", *args]), patch.object(
             sys, "stdin", stdin
         ):
             result = main()

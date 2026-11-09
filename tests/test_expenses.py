@@ -8,8 +8,7 @@ from unittest.mock import patch
 
 from expenses import main
 
-FILE_PARENTS = Path(__file__).resolve().parents
-EXPENSES_FILE = FILE_PARENTS[0] / "fixtures" / "Expenses.csv"
+EXPENSES_FILE = Path(__file__).resolve().parents[1] / "Expenses.csv"
 
 class CliTest(unittest.TestCase):
     def assert_total(

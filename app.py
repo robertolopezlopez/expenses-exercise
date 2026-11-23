@@ -8,6 +8,8 @@ from reader.reader import read_total
 
 app = FastAPI()
 
+MAX_BODY_SIZE = 5 * 1024 * 1024  # 5MB
+
 @app.post("/")
 async def sum_expenses(
     request: Request,
@@ -15,7 +17,14 @@ async def sum_expenses(
     year: int | None = Query(None, ge=1),
     period: str | None = None,
 ):
-    body = await request.body()
+    body_generator = request.stream()
+    body = []
+    len_body = 0
+    async for chunk in body_generator:
+        body.append(chunk)
+        len_body += len(chunk)
+        if len_body > MAX_BODY_SIZE:
+            raise HTTPException(status_code=413, detail="body is too large")
     if not body:
         raise HTTPException(status_code=400, detail="body should not be empty")
 
@@ -30,7 +39,7 @@ async def sum_expenses(
 
     try:
         total = read_total(
-            StringIO(body.decode("utf-8")), ";",
+            StringIO(b"".join(body).decode("utf-8")), ";",
             department, year, period,
         )
     except (UnicodeDecodeError, ValueError, IndexError) as exc:

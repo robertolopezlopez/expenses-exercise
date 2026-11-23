@@ -57,6 +57,26 @@ class RestHappyPathTest(unittest.TestCase):
                          )
         self.assertEqual(response.status_code, 400)
 
+    def test_csv_too_large(self):
+        expenses_content = EXPENSES_FILE.read_text()
+        # Create a body that is too large
+        expenses_content += "x" * (5 * 1024 * 1024 + 1)
+        response = self.client.post("/", content=expenses_content,
+                                   params={"department": "consulting", "year": 2021, "period": "q1"},
+                         )
+        self.assertEqual(response.status_code, 413)
+        self.assertEqual(response.json()["detail"], "body is too large")
+
+    def test_malformed_csv(self):
+        expenses_content = EXPENSES_FILE.read_text()
+        # Create a create a too big field
+        expenses_content += "x" * (200 * 1024)
+        response = self.client.post("/", content=expenses_content,
+                                   params={"department": "consulting", "year": 2021, "period": "q1"},
+                         )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["detail"], "invalid CSV or parameters: CSV not valid")
+
 
 if __name__ == "__main__":
     unittest.main()

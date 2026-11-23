@@ -10,6 +10,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("department")
     parser.add_argument("year", type=int, nargs="?")
     parser.add_argument("period", nargs="?")
+    parser.add_argument("--expense_type", nargs="?")
     return parser
 
 def main() -> str:
@@ -17,7 +18,7 @@ def main() -> str:
     args = build_parser().parse_args()
 
     # read stdin
-    total = read_total(sys.stdin, ';', args.department, args.year, args.period)
+    total = read_total(sys.stdin, ';', args.department, args.year, args.period, args.expense_type)
     return formatExpense(total)
 
 

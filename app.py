@@ -14,7 +14,11 @@ async def sum_expenses(
     department: str = Query(..., min_length=1, ),
     year: int | None = Query(None, ge=1),
     period: str | None = None,
+    expense_type: str | None = Query(None),
 ):
+    if expense_type is not None:
+        expense_type = expense_type.strip().lower()
+
     body = await request.body()
     if not body:
         raise HTTPException(status_code=400, detail="body should not be empty")
@@ -31,7 +35,7 @@ async def sum_expenses(
     try:
         total = read_total(
             StringIO(body.decode("utf-8")), ";",
-            department, year, period,
+            department, year, period, expense_type,
         )
     except (UnicodeDecodeError, ValueError, IndexError) as exc:
         raise HTTPException(

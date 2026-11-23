@@ -21,9 +21,10 @@ cat Expenses.csv | python3 expenses.py Sales
 cat Expenses.csv | python3 expenses.py Sales 2023
 cat Expenses.csv | python3 expenses.py Sales 2023 Q1
 cat Expenses.csv | python3 expenses.py Sales 2023 Jan
+cat Expenses.csv | python3 expenses.py Sales 2023 Jan --expense_type Software
 ```
 
-Department name and period are case insensitive.
+Department name, period,and expense type are case insensitive.
 
 Accepted period values:
 
@@ -57,6 +58,7 @@ Parameters:
 - `department` required
 - `year` optional
 - `period` optional, requires `year`
+- `expense_type` optional
 
 Invalid input returns `400`; FastAPI validation errors return `422`.
 

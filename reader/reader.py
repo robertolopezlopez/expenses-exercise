@@ -4,7 +4,7 @@ from collections.abc import Iterable
 from parser.parser import parse_expense, parse_period
 
 
-def read_total(input: Iterable[str], delimiter: str, department: str, year: int|None, period: str|None) -> int:
+def read_total(input: Iterable[str], delimiter: str, department: str, year: int|None, period: str|None, expense_type: str|None) -> int:
     total = 0
     csv_reader = csv.reader(input, delimiter=delimiter)
 
@@ -19,6 +19,8 @@ def read_total(input: Iterable[str], delimiter: str, department: str, year: int|
         if len(line) != 15:
             raise ValueError("the CSV input must have 15 columns")
         if line[0].lower().strip() != department.lower().strip():
+            continue
+        if expense_type is not None and line[1].lower().strip() != expense_type.lower().strip():
             continue
         if year is not None and int(line[2]) != year:
             continue

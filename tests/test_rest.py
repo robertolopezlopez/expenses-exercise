@@ -7,6 +7,8 @@ from fastapi.testclient import TestClient
 
 from app import app
 
+# FIXME all tests are coupled to Expenses.csv
+# FIXME executing tests from outside of the project will break the path to Expenses.csv - better relative path
 EXPENSES_FILE = Path(__file__).resolve().parents[1] / "Expenses.csv"
 
 class RestHappyPathTest(unittest.TestCase):
@@ -34,7 +36,7 @@ class RestHappyPathTest(unittest.TestCase):
                                    params={"year": 2021, "period": "q1"},
                          )
         # pydantic schema validation - 422
-        self.assertEqual(response.status_code, 422) 
+        self.assertEqual(response.status_code, 422) # testing pydantic behavior, not good idea
 
     def test_blank_department(self):
         expenses_content = EXPENSES_FILE.read_text()
@@ -56,6 +58,7 @@ class RestHappyPathTest(unittest.TestCase):
                                    params={"department": "consulting", "year": 2021, "period": "qqq"},
                          )
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()['detail'], "invalid period: Invalid quarter: qqq")
 
 
 if __name__ == "__main__":

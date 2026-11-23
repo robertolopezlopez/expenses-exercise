@@ -16,9 +16,13 @@ def main() -> str:
     # add CLI parameter handling
     args = build_parser().parse_args()
 
-    # read stdin
-    total = read_total(sys.stdin, ';', args.department, args.year, args.period)
-    return formatExpense(total)
+    try:
+        # read stdin
+        total = read_total(sys.stdin, ';', args.department, args.year, args.period)
+        return formatExpense(total)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(2)
 
 
 if __name__ == "__main__":

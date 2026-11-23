@@ -15,6 +15,13 @@ async def sum_expenses(
     year: int | None = Query(None, ge=1),
     period: str | None = None,
 ):
+    try:
+        if period is not None:
+            parse_period(period)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=f"invalid period: {exc}") from exc
+        
+    
     body = await request.body()
     if not body:
         raise HTTPException(status_code=400, detail="body should not be empty")
@@ -22,10 +29,7 @@ async def sum_expenses(
     if not department.strip():
         raise HTTPException(400, "department should not be whitespace")
 
-    if period is not None and not parse_period(period):
-        raise HTTPException(status_code=400, detail=f"given period is not valid: {period}")
-
-    if period is not None and parse_period(period) and year is None:
+    if period is not None and year is None:
         raise HTTPException(status_code=400, detail=f"given period is not valid without year: {period}")
 
     try:

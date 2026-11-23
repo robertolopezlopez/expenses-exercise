@@ -8,6 +8,8 @@ from unittest.mock import patch
 
 from expenses import main
 
+# FIXME all tests are coupled to Expenses.csv
+# FIXME executing tests from outside of the project will break the path to Expenses.csv - better relative path
 EXPENSES_FILE = Path(__file__).resolve().parents[1] / "Expenses.csv"
 
 class CliTest(unittest.TestCase):
@@ -23,6 +25,11 @@ class CliTest(unittest.TestCase):
             result = main()
 
         self.assertEqual(result, expected)
+
+    def test_wrong_period(self):
+        with self.assertRaises(SystemExit) as cm:
+            self.assert_total("$0", "Sales", "2021", "qqq")
+        self.assertEqual(cm.exception.code, 2)
 
     def test_department_sums_all_years_and_expense_types(self):
         self.assert_total("$7,069,662,522", "Sales")

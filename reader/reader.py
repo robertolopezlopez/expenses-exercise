@@ -12,6 +12,12 @@ def read_total(input: Iterable[str], delimiter: str, department: str, year: int|
     if not header or header[0].strip().lower() != "department":
         raise ValueError("the CSV input should have a valid header")
 
+    if year is not None and year < 1:
+        raise ValueError(f"year must be >= 1, got: {year}")
+
+    if not year and period:
+        raise ValueError(f"given period is not valid without year: {period}")
+
     # Read stdin, line by line. If we later want to read directly from the file, this wouuld avoid OOM errors for too big csv (I have seen that already)
     for line in csv_reader:
         if not line:

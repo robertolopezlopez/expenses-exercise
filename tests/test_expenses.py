@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import io
 import sys
 import unittest
@@ -70,6 +71,13 @@ class CliTest(unittest.TestCase):
         # assert sum of both rows
         self.assert_total("$2,945,234,427", "Sales", "2023")
 
+    def test_invalid_year(self):
+        with self.assertRaises(SystemExit) as ctx:
+            stderr = io.StringIO()
+            with contextlib.redirect_stderr(stderr):
+                self.assert_total("_", "Sales", "0", "Q1")
+        self.assertEqual(ctx.exception.code, 2)
+        self.assertTrue("year must be >= 1" in stderr.getvalue())
 
 if __name__ == "__main__":
     unittest.main()

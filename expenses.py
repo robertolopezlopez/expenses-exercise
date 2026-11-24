@@ -16,9 +16,13 @@ def main() -> str:
     # add CLI parameter handling
     args = build_parser().parse_args()
 
-    # read stdin
-    total = read_total(sys.stdin, ';', args.department, args.year, args.period)
-    return formatExpense(total)
+    try:
+        # read stdin
+        total = read_total(sys.stdin, ';', args.department, args.year, args.period)
+        return formatExpense(total)
+    except (UnicodeDecodeError, ValueError, IndexError) as exc:
+        sys.stderr.write(f"invalid CSV or parameters: {exc}\n")
+        raise SystemExit(2) from exc
 
 
 if __name__ == "__main__":
